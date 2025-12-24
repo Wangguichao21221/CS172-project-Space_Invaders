@@ -148,6 +148,19 @@ while running:
             # 画出 bonus 的速度
             cv2.putText(annotated, f"Bonus Speed: {algo.bonus_speed:.2f}", (10, 170),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+        
+        # 绘制敌人预测位置
+        if hasattr(algo, 'predicted_enemy_pos') and algo.predicted_enemy_pos:
+            ex, ey = algo.predicted_enemy_pos
+            cv2.drawMarker(annotated, (int(ex), int(ey)), (0, 255, 255), cv2.MARKER_TILTED_CROSS, 15, 2)
+            cv2.putText(annotated, "Enemy Predict", (int(ex) + 10, int(ey) + 20),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+        
+        # 显示周期信息
+        if algo.movement_pattern['is_calibrated']:
+            p = algo.movement_pattern
+            cv2.putText(annotated, f"Period: {p['frames_per_step']}f, Step: {p['pixels_per_step']:.1f}px", 
+                       (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
     
     # 调试工具2：在画面上绘制所有标点
     for px, py in clicked_points:
