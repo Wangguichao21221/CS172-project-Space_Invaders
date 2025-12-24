@@ -14,7 +14,7 @@ pygame.init()
 # 设置PyGame窗口（用于捕获键盘事件）
 
 # 加载模型
-model = YOLO('./best.pt')
+model = YOLO('./yolo.pt')
 
 # 创建环境
 env = gym.make(

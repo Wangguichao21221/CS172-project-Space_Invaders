@@ -318,9 +318,9 @@ class algorithm():
       else:
         return ACTION_NOOP
     elif dx < -3:
-       return ACTION_LEFT
+       return ACTION_LEFTFIRE
     else:
-       return ACTION_RIGHT
+       return ACTION_RIGHTFIRE
   def shoot_bonus(self):
     if 'bonus' not in self.positions:
        return ACTION_NOOP
@@ -348,7 +348,7 @@ class algorithm():
           dy = bullet[1] - self.player_pos[1]
           
           # y 范围增加到 180 像素，提供更早的预警，x 范围设定为覆盖玩家身位（约 60 像素）
-          if abs(dx) < 65 and abs(dy) < 180:
+          if abs(dx) < 50 and abs(dy) < 100:
               self.danger = True
               
               # 边界判定逻辑
