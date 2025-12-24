@@ -1,12 +1,28 @@
 import numpy as np
-
+import cv2
 ACTION_NOOP = 0      # 不动
 ACTION_FIRE = 1      # 发射
 ACTION_RIGHT = 2     # 向右
 ACTION_LEFT = 3      # 向左
 ACTION_RIGHTFIRE = 4 # 向右并发射
 ACTION_LEFTFIRE = 5  # 向左并发射
-
+def shelter(observe):
+   # --- 掩体检测逻辑 ---
+    # 提取定义的 ROI (y: 460-517, x: 211-602)
+    roi_y1, roi_y2, roi_x1, roi_x2 = 460, 517, 211, 602
+    shelter_roi = observe[roi_y1:roi_y2, roi_x1:roi_x2]
+    
+    # 转换为 HSV 并提取黄色
+    hsv_roi = cv2.cvtColor(shelter_roi, cv2.COLOR_BGR2HSV)
+    # 根据实测值 [9, 199, 181] 精准调整范围：
+    # H: 5-15 (捕捉实测的 9), S: 150-255 (实测 199, 过滤背景), V: 100-255 (实测 181)
+    lower_yellow = np.array([5, 150, 100])
+    upper_yellow = np.array([15, 255, 255])
+    mask = cv2.inRange(hsv_roi, lower_yellow, upper_yellow)
+    
+    # 转换为 0/1 状态矩阵
+    shelter_status = (mask > 0).astype(np.uint8)
+    return shelter_status
 class algorithm():
   def __init__(self):
     self.player_pos = (0,0)

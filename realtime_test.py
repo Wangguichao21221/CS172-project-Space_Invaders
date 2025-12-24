@@ -7,7 +7,7 @@ from ultralytics import YOLO
 import ale_py
 import pygame
 import random
-from algo import algorithm
+from algo import algorithm, shelter
 # 初始化
 pygame.init()
 
@@ -105,21 +105,7 @@ while running:
     frame_index+=1
     obs_bgr = cv2.cvtColor(obs, cv2.COLOR_RGB2BGR)
 
-    # --- 掩体检测逻辑 ---
-    # 提取定义的 ROI (y: 460-517, x: 211-602)
-    roi_y1, roi_y2, roi_x1, roi_x2 = 460, 517, 211, 602
-    shelter_roi = obs_bgr[roi_y1:roi_y2, roi_x1:roi_x2]
-    
-    # 转换为 HSV 并提取黄色
-    hsv_roi = cv2.cvtColor(shelter_roi, cv2.COLOR_BGR2HSV)
-    # 根据实测值 [9, 199, 181] 精准调整范围：
-    # H: 5-15 (捕捉实测的 9), S: 150-255 (实测 199, 过滤背景), V: 100-255 (实测 181)
-    lower_yellow = np.array([5, 150, 100])
-    upper_yellow = np.array([15, 255, 255])
-    mask = cv2.inRange(hsv_roi, lower_yellow, upper_yellow)
-    
-    # 转换为 0/1 状态矩阵
-    shelter_status = (mask > 0).astype(np.uint8)
+    shelter_status = shelter(obs_bgr)
 
     results = model(obs_bgr, conf=0.25, verbose=False)
     if results[0].boxes is not None:
