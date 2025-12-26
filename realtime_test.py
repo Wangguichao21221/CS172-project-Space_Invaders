@@ -8,13 +8,17 @@ import ale_py
 import pygame
 import random
 from algo import algorithm, shelter
+import argparse
 # 初始化
+parser = argparse.ArgumentParser()
+parser.add_argument('--ckpt',type=str,default='./yolo.pt')
+args = parser.parse_args()
 pygame.init()
 
 # 设置PyGame窗口（用于捕获键盘事件）
 
 # 加载模型
-model = YOLO('./yolo.pt')
+model = YOLO(args.ckpt)
 
 # 创建环境
 env = gym.make(
@@ -29,7 +33,7 @@ obs, info = env.reset()
 
 # 设置显示大小
 
-display_size = (838,618)
+display_size = (618,838)
 
 # 创建OpenCV窗口
 cv2.namedWindow('Space Invader Detection')
@@ -174,7 +178,9 @@ while running:
     # 游戏重置
     if terminated or truncated:
         obs, info = env.reset()
-        print("游戏重置")
+        video_writer.release()
+        video_writer = None
+        running = False
 
 # 清理
 env.close()

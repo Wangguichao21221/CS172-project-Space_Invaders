@@ -12,7 +12,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-n",'--num',type=int,default=10)
-
+parser.add_argument('--headless', type = bool, default= True)
+parser.add_argument('--ckpt',type=str,default='./yolo.pt')
 args = parser.parse_args()
 # 初始化
 pygame.init()
@@ -20,12 +21,12 @@ pygame.init()
 # 设置PyGame窗口（用于捕获键盘事件）
 
 # 加载模型
-model = YOLO('./yolo.pt')
-
+model = YOLO(args.ckpt)
+render_mode = "rgb_array" if args.headless else "human"
 # 创建环境
 env = gym.make(
     'ALE/SpaceInvaders-v5',
-    render_mode='human',
+    render_mode=render_mode,
     frameskip=1,  
     repeat_action_probability=0.0  
 )
