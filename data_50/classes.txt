@@ -1,0 +1,9 @@
+bonus
+bullet
+invader1
+invader2
+invader3
+invader4
+invader5
+invader6
+player

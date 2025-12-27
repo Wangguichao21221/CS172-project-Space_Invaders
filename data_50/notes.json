@@ -1,0 +1,45 @@
+{
+  "categories": [
+    {
+      "id": 0,
+      "name": "bonus"
+    },
+    {
+      "id": 1,
+      "name": "bullet"
+    },
+    {
+      "id": 2,
+      "name": "invader1"
+    },
+    {
+      "id": 3,
+      "name": "invader2"
+    },
+    {
+      "id": 4,
+      "name": "invader3"
+    },
+    {
+      "id": 5,
+      "name": "invader4"
+    },
+    {
+      "id": 6,
+      "name": "invader5"
+    },
+    {
+      "id": 7,
+      "name": "invader6"
+    },
+    {
+      "id": 8,
+      "name": "player"
+    }
+  ],
+  "info": {
+    "year": 2025,
+    "version": "1.0",
+    "contributor": "Label Studio"
+  }
+}

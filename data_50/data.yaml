@@ -1,0 +1,18 @@
+path:   D:\Study\CS172\final\SpaceInvader\data_50 # 数据集根目录（建议使用绝对路径）
+train: images  # 所有图片作为训练集
+val: val    # 也用所有图片作为验证集（不理想，但可用）
+
+# 类别数量（修改为你的实际类别数）
+nc: 9
+
+# 类别名称列表（必须与标注时的类别对应）
+names:
+  0: bonus
+  1: bullet
+  2: invader1
+  3: invader2
+  4: invader3
+  5: invader4
+  6: invader5
+  7: invader6
+  8: player
