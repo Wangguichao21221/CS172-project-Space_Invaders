@@ -55,6 +55,7 @@ class algorithm():
     }
     self.reference_invader_id = None
     self.current_frame = 0
+    self.total_enemy_count = 0
   def get_record(self):
      return self.enemy_record
   def detect_bonus(self,frame):
@@ -94,18 +95,23 @@ class algorithm():
       if current_x is None:
           return
 
+      current_enemy_count = self.count_total_enemies()
       p = self.movement_pattern
-      if p['last_x'] is None:
+      
+      # 检测参考点重置：如果是首次记录，或者敌人总数发生变化（通常意味着原参考敌人被击杀）
+      if p['last_x'] is None or current_enemy_count != self.total_enemy_count:
           p['last_x'] = current_x
           p['last_jump_frame'] = frame_index
+          self.total_enemy_count = current_enemy_count
+          # 敌人数量变化时，原有的移动规律可能失效，重置校准状态
+          p['is_calibrated'] = False
           return
 
       dx = current_x - p['last_x']
       
       # 检测是否发生了移动（跳跃）
-      # 这里使用 abs(dx) > 0.5 过滤掉 YOLO 检测的小幅抖动
-      # 同时如果 abs(dx) 过大（比如 > 15），可能是参考物（最左边的敌人）被消灭了，换了一个参考物，此时不应视为跳跃
-      if 0.5 < abs(dx) < 15.0:
+      # 使用 abs(dx) > 0.5 过滤掉检测抖动。不再使用固定阈值（如 15.0）判断重置，改用上面的总数变化逻辑
+      if abs(dx) > 0.5:
           frames_passed = frame_index - p['last_jump_frame']
           
           # 如果已经校准，且检测到的跳跃与规律不符，说明规律变了（比如敌人变少速度加快）
@@ -123,10 +129,6 @@ class algorithm():
           
           # 一旦捕捉到一次有效的移动，就认为是进入了新周期
           p['is_calibrated'] = True
-      elif abs(dx) >= 15.0:
-          # 参考点发生大范围偏移，通常是原参考敌人被击杀，重置参考点
-          p['last_x'] = current_x
-          p['last_jump_frame'] = frame_index
       else:
           # 没有移动或抖动过小，保持现状
           pass
@@ -146,6 +148,7 @@ class algorithm():
     self.shelter_mask = shelter_mask
     class_positions = {}
     for result in results:
+
         class_names = result.names
         boxes = result.boxes
         if boxes is not None:
@@ -364,7 +367,7 @@ class algorithm():
           dy = bullet[1] - self.player_pos[1]
           
           # y 范围增加到 180 像素，提供更早的预警，x 范围设定为覆盖玩家身位（约 60 像素）
-          if abs(dx) < 50 and abs(dy) < 100:
+          if abs(dx) < 60 and abs(dy) < 100:
               self.danger = True
               
               # 边界判定逻辑
