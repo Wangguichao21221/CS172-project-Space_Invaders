@@ -11,7 +11,7 @@ from algo import algorithm, shelter
 import argparse
 # 初始化
 parser = argparse.ArgumentParser()
-parser.add_argument('--ckpt',type=str,default='./yolo.pt')
+parser.add_argument('--ckpt',type=str,default='./best.pt')
 args = parser.parse_args()
 pygame.init()
 

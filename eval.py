@@ -12,8 +12,8 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-n",'--num',type=int,default=10)
-parser.add_argument('--headless', type = bool, default= True)
-parser.add_argument('--ckpt',type=str,default='./yolo.pt')
+parser.add_argument('--headless', type = bool, default= False)
+parser.add_argument('--ckpt',type=str,default='./best.pt')
 args = parser.parse_args()
 # 初始化
 pygame.init()
